@@ -64,16 +64,8 @@ def do_all(path):
         else:
             count[address] = 1
 
-    data = count.values()
-
-    CDF = [
-        len(list(
-            filter(
-                lambda x: x > index,
-                data
-            )
-        )) for index in range(max(data))
-    ]
+    data = np.array(list(count.values()))
+    CDF = cdf_from_data(data)
     complot(CDF, math.log)
 
 if __name__ == "__main__":
