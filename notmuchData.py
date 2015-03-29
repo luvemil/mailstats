@@ -25,3 +25,8 @@ class mailDir(Query):
             msgs
             )
         return addresses
+
+    def count_addresses(self):
+        """Count the number of unique addresses matching the query."""
+        addresses = self.search_addresses()
+        return len(set(addresses))
