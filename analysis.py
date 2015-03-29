@@ -61,6 +61,18 @@ def do_threads(path):
     CDF = cdf_from_data(data)
     complot(CDF, math.log)
 
+def do_addresses_in_threads(path):
+    db = Database(path)
+    threads = mailDir(db,"*").search_threads()
+    data = []
+    for thread in threads:
+        data.append(
+            mailDir(db,
+                    "thread:"+thread.get_thread_id()).count_addresses()
+        )
+    CDF = cdf_from_data(data)
+    complot(CDF,math.log)
+
 def do_all(path):
     db = Database(path)
 
@@ -83,4 +95,4 @@ if __name__ == "__main__":
         path = sys.argv[1]
     else:
         path = dbpath
-    do_all(path)
+    do_addresses_in_threads(path)
