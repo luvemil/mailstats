@@ -51,6 +51,16 @@ def cdf_from_data(data):
     cdf = np.true_divide(relative_freq, tot)
     return cdf
 
+def do_threads(path):
+    db = Database(path)
+    threads = mailDir(db,"*").search_threads()
+    data = np.array(list(map(
+        lambda x: x.get_total_messages(),
+        threads
+    )))
+    CDF = cdf_from_data(data)
+    complot(CDF, math.log)
+
 def do_all(path):
     db = Database(path)
 
