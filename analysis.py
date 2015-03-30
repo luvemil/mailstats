@@ -54,21 +54,23 @@ def cdf_from_data(data):
 def do_threads(path):
     data = getData(path).mex_in_threads()
     CDF = cdf_from_data(data)
-    complot(CDF, math.log)
+    return CDF
 
 def do_addresses_in_threads(path):
     data = getData(path).addresses_in_threads()
     CDF = cdf_from_data(data)
-    complot(CDF,math.log)
+    return CDF
 
 def do_all(path):
     data = getData(path).addresses()
     CDF = cdf_from_data(data)
-    complot(CDF, math.log)
+    return CDF
 
 if __name__ == "__main__":
     if len(sys.argv) > 1:
         path = sys.argv[1]
     else:
         path = dbpath
-    do_addresses_in_threads(path)
+    CDF = do_threads(path)
+    plt.loglog(np.arange(1,len(CDF)+1),CDF,'r.')
+    plt.show()
