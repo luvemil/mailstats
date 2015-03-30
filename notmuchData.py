@@ -34,11 +34,19 @@ class mailDir(Query):
 
 class getData(Database):
     """docstring for getData"""
-    def __init__(self, *args, **kwargs):
-        super(getData, self).__init__(*args, **kwargs)
+    def __init__(self, db, param="*", *args, **kwargs):
+        super(getData, self).__init__(db, *args, **kwargs)
+        self.query = mailDir(self,param)
+        self.param = param
+
+    def new_query(self,param):
+        if self.param == "*":
+            return mailDir(self,param)
+        else:
+            return mailDir(self,self.param+" "+param)
 
     def addresses(self):
-        addrs = mailDir(self,"*").search_addresses()
+        addrs = self.query.search_addresses()
         count = {}
         for addr in addrs:
             if addr in count:
@@ -49,7 +57,7 @@ class getData(Database):
         return data
 
     def mex_in_threads(self):
-        threads = mailDir(self,"*").search_threads()
+        threads = self.query.search_threads()
         data = np.array(list(map(
             lambda x: x.get_total_messages(),
             threads
@@ -57,11 +65,10 @@ class getData(Database):
         return data
 
     def addresses_in_threads(self):
-        threads = mailDir(self,"*").search_threads()
+        threads = self.query.search_threads()
         data = []
         for thread in threads:
             data.append(
-                mailDir(self,
-                        "thread:"+thread.get_thread_id()).count_addresses()
+                self.new_query("thread:"+thread.get_thread_id()).count_addresses()
             )
         return np.array(data)
