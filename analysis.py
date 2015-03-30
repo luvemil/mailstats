@@ -51,6 +51,21 @@ def cdf_from_data(data):
     cdf = np.true_divide(relative_freq, tot)
     return cdf
 
+class getData(Database):
+    """docstring for getData"""
+    def __init__(self, *args, **kwargs):
+        super(getData, self).__init__(*args, **kwargs)
+
+    def addresses(self):
+        pass
+        
+    def mex_in_threads(self):
+        pass
+
+    def addresses_in_threads(self):
+        pass
+
+
 def do_threads(path):
     db = Database(path)
     threads = mailDir(db,"*").search_threads()
