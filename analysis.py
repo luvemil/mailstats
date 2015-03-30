@@ -6,6 +6,7 @@ import math
 import matplotlib.pyplot as plt
 import sys
 import numpy as np
+import powerlaw
 
 dbpath = "maildirs/arch-dev-public"
 
@@ -66,11 +67,18 @@ def do_all(path):
     CDF = cdf_from_data(data)
     return CDF
 
+def do_stuff(data):
+    fit = powerlaw.Fit(data)
+    fig1 = fit.plot_pdf(color='b', linewidth=2)
+    fit.power_law.plot_pdf(color='b', linestyle='--', ax=fig1)
+    fit.plot_ccdf(color='r', linewidth=2, ax=fig1)
+    fit.power_law.plot_ccdf(color='r', linestyle='--', ax=fig1)
+    plt.show()
+
 if __name__ == "__main__":
     if len(sys.argv) > 1:
         path = sys.argv[1]
     else:
         path = dbpath
-    CDF = do_threads(path)
-    plt.loglog(np.arange(1,len(CDF)+1),CDF,'r.')
-    plt.show()
+    data = getData(path).addresses()
+    do_stuff(data)
