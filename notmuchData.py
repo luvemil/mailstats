@@ -1,6 +1,7 @@
 import notmuch
 from notmuch import Database, Query
 import re
+import numpy as np
 
 class mailDir(Query):
     """Works like Query:
@@ -30,3 +31,37 @@ class mailDir(Query):
         """Count the number of unique addresses matching the query."""
         addresses = self.search_addresses()
         return len(set(addresses))
+
+class getData(Database):
+    """docstring for getData"""
+    def __init__(self, *args, **kwargs):
+        super(getData, self).__init__(*args, **kwargs)
+
+    def addresses(self):
+        addrs = mailDir(self,"*").search_addresses()
+        count = {}
+        for addr in addrs:
+            if addr in count:
+                count[addr] += 1
+            else:
+                count[addr] = 1
+        data = np.array(list(count.values()))
+        return data
+
+    def mex_in_threads(self):
+        threads = mailDir(self,"*").search_threads()
+        data = np.array(list(map(
+            lambda x: x.get_total_messages(),
+            threads
+        )))
+        return data
+
+    def addresses_in_threads(self):
+        threads = mailDir(self,"*").search_threads()
+        data = []
+        for thread in threads:
+            data.append(
+                mailDir(self,
+                        "thread:"+thread.get_thread_id()).count_addresses()
+            )
+        return np.array(data)
