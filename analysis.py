@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-
+import pdb
 from notmuchData import mailDir, getData
 from notmuch import Database
 import math
@@ -80,5 +80,7 @@ if __name__ == "__main__":
         path = sys.argv[1]
     else:
         path = dbpath
-    data = getData(path).addresses()
+    db = getData(path)
+    data = db.addresses()
+    db.close()
     do_stuff(data)
